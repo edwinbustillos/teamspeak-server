@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   teamspeak:
-    platform: linux/amd64
-    build: .
+    image: teamspeak-server:latest
     container_name: teamspeak-server
     restart: unless-stopped
+    # entrypoint: ["/bin/sh", "-C","./entrypoint.sh"]
     environment:
       - TS3SERVER_LICENSE=accept
       - TS3SERVER_QUERY_PROTOCOLS=http

@@ -1,15 +1,12 @@
 #!/bin/sh
 
-# Verifica se é a primeira execução
-if [ ! -f /var/ts3server/licensekey.dat ]; then
-    cp -a /opt/teamspeak/* /var/ts3server/
-fi
+cp -a /opt/teamspeak/* /var/ts3server/
 
 # Ajusta permissões
 chown -R teamspeak:teamspeak /var/ts3server
 
 # Executa o servidor como usuário não-root
-exec su-exec teamspeak /opt/teamspeak/ts3server \
+exec gosu teamspeak /opt/teamspeak/ts3server \
     license_accepted=1 \
     query_protocols=http \
     query_http_ip=0.0.0.0 \
