@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  teamspeak:
+    platform: linux/amd64
+    build: .
+    container_name: teamspeak-server
+    restart: unless-stopped
+    environment:
+      - TS3SERVER_LICENSE=accept
+      - TS3SERVER_QUERY_PROTOCOLS=http
+      - TS3SERVER_QUERY_HTTP_PORT=10011
+      - TS3SERVER_FILETRANSFER_PORT=30033
+      - TS3SERVER_DEFAULT_VOICE_PORT=9987
+      - TS3SERVER_IP_WHITELIST=/var/ts3server/query_ip_whitelist.txt
+      - TS3SERVER_IP_BLACKLIST=/var/ts3server/query_ip_blacklist.txt
+    ports:
+      - "9987:9987/udp"
+      - "10011:10011/tcp"
+      - "30033:30033/tcp"
+    volumes:
+      - teamspeak_data:/var/ts3server
+    healthcheck:
+      test: ["CMD-SHELL", "netstat -tuln | grep -q 9987"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - ts3-network
+
+volumes:
+  teamspeak_data:
+    driver: local
+
+networks:
+  ts3-network:
+    driver: bridge
